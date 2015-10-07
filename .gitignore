@@ -3,21 +3,21 @@
 *~
 
 # Autotools
-/src/aclocal.m4
-/src/autom4te.cache/
-/src/config.guess
-/src/config.sub
-/src/configure
-/src/install-sh
+/aclocal.m4
+/autom4te.cache/
+/config.guess
+/config.sub
+/configure
+/install-sh
 
 # Build files
 Makefile
 *.o
 *.a
 *.so
-/src/config.h
-/src/config.log
-/src/config.status
-/src/client/kx509
-/src/client/kxlist
-/src/stamp-h
+/config.h
+/config.log
+/config.status
+/client/kx509
+/client/kxlist
+/stamp-h
