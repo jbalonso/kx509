@@ -38,7 +38,8 @@ man8dir= ${prefix}/man/man8
 # to locate the Krb4, OpenSSL, and RSAref include files and libraries
 
 KRBBASE= @KRBBASE@
-OPENSSLBASE= @OPENSSLBASE@
+OPENSSL_CFLAGS = @OPENSSL_CFLAGS@
+OPENSSL_LIBS = @OPENSSL_LIBS@
 RSAREFBASE= @RSAREFBASE@
 
 ##### End of system configuration section #####
@@ -51,26 +52,12 @@ KRBLIB=$(KRBBASE)/lib
 KRBLIBS= -L$(KRBLIB) -lkrb4 -lkrb5 -ldes425 -lkrb5 -ldes425 -lcrypto -lcom_err
 
 
-SSL_LIBS= -R$(OPENSSLBASE) -L$(OPENSSLBASE) -lRSAglue \
-		-R$(RSAREFBASE)/local -L$(RSAREFBASE)/local/ -lrsaref
-
 SOCK_LIBS=-lresolv -lsocket -lnsl
-EX_LIBS= $(SSL_LIBS) $(SOCK_LIBS)
+EX_LIBS= $(OPENSSL_LIBS) $(SOCK_LIBS)
 
-DLIBCRYPTO=$(OPENSSLBASE)/libsslcrypto.a
+INCLUDE = -I.. $(KRBINCS) -I$(srcdir)
 
-# -lcrypto would be preferred except that KRB5 also has a libcrypto.  They fixed this
-#   later, but it's not yet corrected in /usr/itd/packages.  Should switch once
-#   /usr/itd/packages has been updated.
-
-#LIBCRYPTO=-L$(OPENSSLBASE) -lcrypto
-LIBCRYPTO=$(DLIBCRYPTO)
-
-INCLUDE = -I.. $(KRBINCS) \
-		-I$(OPENSSLBASE)/include -I$(OPENSSLBASE)/include/openssl \
-		-I$(srcdir)
-
-WEBCGI_CFLAGS = $(CCOPT) $(DEFINE) $(INCLUDE) $(CFLAGS)
+WEBCGI_CFLAGS = $(CCOPT) $(DEFINE) $(INCLUDE) $(OPENSSL_CFLAGS) $(CFLAGS)
 LDFLAGS = @LDFLAGS@ -R$(KRBLIB)
 
 KX509_OBJS = kx509.o cu_util.o debug.o krbchk_ie.o store_tkt.o
@@ -94,4 +81,4 @@ kx509.o: kx509.c
 
 kx509: $(KX509_OBJS) 
 	$(RM) kx509
-	$(CC) -o kx509 $(LDFLAGS) $(KX509_OBJS) $(KRBLIBS) $(LIBCRYPTO) $(EX_LIBS)
+	$(CC) -o kx509 $(LDFLAGS) $(KX509_OBJS) $(KRBLIBS) $(EX_LIBS)

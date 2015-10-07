@@ -36,12 +36,12 @@ man8dir		= ${prefix}/man/man8
 # to locate the Krb include files and libraries
 
 KRB_BASE	= @KRBBASE@
-OPENSSL_BASE	= @OPENSSLBASE@
+OPENSSL_CFLAGS	= @OPENSSL_CFLAGS@
 
-INCLUDE 	= -I$(OPENSSL_BASE)/include -I.. -I$(srcdir)
+INCLUDE 	= -I.. -I$(srcdir)
 
 CFLAGS		= @CFLAGS@
-LIB_CFLAGS	= -D@SYS@ $(CCOPT) $(DEFS) $(DEFINE) $(INCLUDE) $(CFLAGS)
+LIB_CFLAGS	= -D@SYS@ $(CCOPT) $(DEFS) $(DEFINE) $(INCLUDE) $(OPENSSL_CFLAGS) $(CFLAGS)
 
 KX_LIB_OBJS 	= udp_nb_socket.o	udp_nb_sockets.o 		\
 		  udp_nb_bind.o		udp_nb_connect.o 		\

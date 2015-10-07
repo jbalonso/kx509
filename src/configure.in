@@ -621,67 +621,7 @@ dnl echo "KRB_INC     : $KRB_INC"
 dnl echo "KRB_LIB     : $KRB_LIB"
 dnl echo ""
 
-AC_ARG_WITH(
-   openssl,
-   [  --with-openssl=path     specify where the ssl package lives],
-   [  case "$with_openssl" in
-         yes|no)
-            OPENSSLBASE=$with_openssl
-            ;;
-         *)
-            if test -f $with_openssl/include/crypto.h \
-                  -o -f $with_openssl/include/openssl/crypto.h ; then
-               OPENSSLBASE=$with_openssl
-               withval=set
-            else
-               AC_MSG_ERROR([Could not locate crypto.h; you may need to specify --with-openssl?])
-            fi
-            ;;
-      esac
-   ],
-   [  if test "${OPENSSLBASE+set}" = set; then
-         AC_MSG_RESULT([Using existing OPENSSLBASE setting of $OPENSSLBASE])
-      else
-         AC_CACHE_CHECK(
-            OPENSSLBASE setting,
-            ac_cv_path_OPENSSLBASE,
-            [  for ac_cv_path_OPENSSLBASE in $kx509_path_OPENSSLBASE "no"
-               do
-                  case "$ac_cv_path_OPENSSLBASE" in
-                     "no")
-                        break
-                        ;;
-                     *)
-                        dnl echo "TRYING VALUE: $ac_cv_path_OPENSSLBASE"
-                        if test -f "$ac_cv_path_OPENSSLBASE"/include/crypto.h \
-                              -o -f "$ac_cv_path_OPENSSLBASE"/include/openssl/crypto.h ; then
-                           break
-                        fi
-                        ;;
-                  esac
-               done
-            ]
-         )
-         OPENSSLBASE=$ac_cv_path_OPENSSLBASE
-      fi
-   ]
-)
-
-AC_MSG_CHECKING(for proper OPENSSL library directory)
-if test -f "$OPENSSLBASE"/libssl.$SHLIB_SUFFIX -o -f "$OPENSSLBASE"/libssl.a
-then
-   OPENSSLLIB=$OPENSSLBASE
-else
-   if test -f "$OPENSSLBASE"/lib/libssl.$SHLIB_SUFFIX -o -f "$OPENSSLBASE"/lib/libssl.a
-   then
-      OPENSSLLIB="$OPENSSLBASE"/lib
-   else
-      echo ""
-      echo "Tried "$OPENSSLBASE"/libssl.$SHLIB_SUFFIX and "$OPENSSLBASE"/lib/libssl.$SHLIB_SUFFIX "
-      AC_MSG_ERROR([Could not find libssl.$SHLIB_SUFFIX; you may need to specify --with-openssl?])
-   fi
-fi
-AC_MSG_RESULT(ok)
+PKG_CHECK_MODULES([OPENSSL], [openssl >= 1.0])
 
 AC_MSG_CHECKING(for specification of --with-libpath)
 AC_ARG_WITH(
@@ -871,8 +811,8 @@ fi
 AC_SUBST(LDFLAGS) AC_MSG_RESULT($LDFLAGS)
 
 AC_SUBST(CFLAGS)
-AC_SUBST(OPENSSLBASE)
-AC_SUBST(OPENSSLLIB)
+AC_SUBST(OPENSSL_CFLAGS)
+AC_SUBST(OPENSSL_LIBS)
 AC_SUBST(AFSTOP)
 AC_SUBST(UNIQNAMEBASE)
 AC_SUBST(LDAPBASE)

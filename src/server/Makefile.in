@@ -42,8 +42,8 @@ man8dir		= ${prefix}/man/man8
 AFSTOP		= @AFSTOP@
 KRBBASE		= @KRBBASE@
 LDAPBASE	= @LDAPBASE@
-OPENSSLBASE	= @OPENSSLBASE@
-OPENSSLLIB	= @OPENSSLLIB@
+OPENSSL_CFLAGS	= @OPENSSL_CFLAGS@
+OPENSSL_LIBS	= @OPENSSL_LIBS@
 UNIQNAMEBASE	= @UNIQNAMEBASE@
 
 ##### End of system configuration section #####
@@ -74,20 +74,16 @@ AFSLIBS		= @AFS_DOMESTIC_LIBDIR@ -L$(AFSLIBDIR) -L$(AFSLIBDIR)/afs \
 
 UNIQNAMELIBS	= -L$(UNIQNAMEBASE)/lib -luniq $(AFSLIBS)
 
-LIBCRYPTO	= @CRYPTO_REF@ -L$(OPENSSLLIB) -lcrypto
-LIBSSL		= @SSL_REF@ -L$(OPENSSLLIB) -lssl
-
 SOCK_LIBS	= @SOCK_LIBS@
 
-EX_LIBS		= $(LIBSSL) $(LIBCRYPTO) $(SOCK_LIBS)
+EX_LIBS		= $(OPENSSL_LIBS) $(SOCK_LIBS)
 
 DEFINE		= $(DEFS) -DOPENSSL -D@SYS@
 
-INCLUDE		= -I.. -I$(OPENSSLBASE) -I$(OPENSSLBASE)/include \
-		  -I$(OPENSSLBASE)/include/openssl -I$(srcdir) \
+INCLUDE		= -I.. -I$(srcdir) \
 	  	  -I$(UNIQNAMEBASE)/include -I$(AFSTOP)/include -I$(srcdir)/../lib
 
-SERVER_CFLAGS	= $(CCOPT) $(DEFINE) $(INCLUDE) $(CFLAGS)
+SERVER_CFLAGS	= $(CCOPT) $(DEFINE) $(INCLUDE) $(OPENSSL_CFLAGS) $(CFLAGS)
 
 S_UTILS		= su_util.o su_getcn.o su_getumid.o su_getflags.o su_kca_ext.o su_clntvers.o dprintf.o
 
