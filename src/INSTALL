@@ -4,7 +4,6 @@ Requirements
 ============
 
 All platforms assume the use of OpenSSL.  (http://www.openssl.org)
-We currently build and test with version 0.9.6b of the OpenSSL code.
 
 The use of MIT Kerberos is also assumed.  (http://web.mit.edu/~kerberos)
 We currently build and test with version 1.2.1 of the MIT code.
@@ -24,6 +23,15 @@ is possible to configure the server to accept either Kerberos 4 or
 Kerberos 5 authentication, or both.
 
 Note that the server is not supported on Windows or MacOS.
+
+Preliminaries
+-------------
+
+If you are building in a checkout of the version control codebase, you
+will need to build the configure script and add in its requisite files:
+
+	autoreconf -i
+	automake --add-missing
 
 UN*X platforms
 --------------
@@ -50,8 +58,6 @@ There are several options to the configure script that may be specified:
 			this option disables Kerberos 5.
 			You may optionally specify the path to your site's
 			kerberos installation directory.
---with-openssl=PATH     You may specify your site's path to the OpenSSL
-			installation.
 --enable-libkx509	This enables a library version (as opposed to a
 			main program) of the client which can be run from
 			another program.
